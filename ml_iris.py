@@ -30,11 +30,16 @@ print(clf.predict(test_data))
 # visualization.
 
 from sklearn.externals.six import StringIO
-import pydot
 import pydotplus
-import graphviz
-dot_data = tree.export_graphviz(clf, out_file=None) 
-graph = graphviz.Source(dot_data) 
-graph.render("iris")
+dot_data = StringIO()
+tree.export_graphviz(clf,
+        out_file=dot_data,
+        feature_names=iris.feature_names,
+        class_names=iris.target_names,
+        filled=True, rounded=True,
+        impurity=False)
 
-#open -a preview iris.pdf
+graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+graph.write_pdf("iris.pdf")
+
+# & .\iris.pdf to display pdf
